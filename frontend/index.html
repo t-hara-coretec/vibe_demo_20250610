@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Speech-to-Text App</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col items-center py-10">
+    <div class="w-full max-w-lg bg-white p-8 rounded-xl shadow">
+        <h1 class="text-2xl font-bold mb-4 text-center">Speech-to-Text Converter</h1>
+
+        <form id="audioForm" class="space-y-4">
+            <input type="file" id="mp3File" accept=".mp3" class="block w-full text-sm text-gray-700" required />
+            <button type="submit" class="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700">Upload & Convert</button>
+        </form>
+
+        <div id="progress" class="mt-4 hidden text-blue-600">Processing...</div>
+        <div id="errorMsg" class="mt-4 hidden text-red-600"></div>
+
+        <textarea id="resultText" class="w-full mt-4 h-40 border rounded p-2 text-sm hidden"></textarea>
+        <a id="downloadLink" href="#" class="hidden block mt-2 text-blue-700 hover:underline" download>Download Transcript</a>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
