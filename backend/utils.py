@@ -5,7 +5,7 @@ from typing import List
 from pydub import AudioSegment
 
 
-def split_mp3_if_needed(file_path: str, chunk_size_mb: int = 25) -> List[str]:
+def split_mp3_if_needed(file_path: str, chunk_size_mb: int = 10) -> List[str]:
     """If file is larger than chunk_size_mb, split into parts. Returns list of file paths."""
     chunk_byte_limit = chunk_size_mb * 1024 * 1024
     if os.path.getsize(file_path) <= chunk_byte_limit:
@@ -27,6 +27,7 @@ def split_mp3_if_needed(file_path: str, chunk_size_mb: int = 25) -> List[str]:
         with tempfile.NamedTemporaryFile(delete=False, suffix=f"_part{index}.mp3") as tf:
             chunk.export(tf.name, format="mp3")
             parts.append(tf.name)
+            print(f"split_{index}")
         start = end
         index += 1
 

@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.background import BackgroundTasks
 from dotenv import load_dotenv
 from backend.utils import split_mp3_if_needed, delete_file
+import time
 
 app = FastAPI()
 load_dotenv()
@@ -20,6 +21,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+print("helloooo!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
 UPLOAD_DIR = "temp_uploads"
 RESULTS_DIR = "transcripts"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
@@ -28,12 +31,45 @@ os.makedirs(RESULTS_DIR, exist_ok=True)
 # --- Simulate job state ---
 jobs = {}
 
+from pydantic import BaseModel
+from fastapi import Request
+
+# Class for summary request
+class SummaryRequest(BaseModel):
+    text: str
+
+@app.post("/summarize")
+async def summarize(req: SummaryRequest):
+    if not OPENAI_API_KEY:
+        raise HTTPException(status_code=500, detail="OpenAI API key not set.")
+
+    prompt = f"Summarize this text as clearly and concisely as possible:\n\n{req.text.strip()}"
+    try:
+        response = httpx.post(
+            "https://api.openai.com/v1/chat/completions",
+            headers={"Authorization": f"Bearer {OPENAI_API_KEY}"},
+            json={
+                "model": "gpt-4.1",
+                "messages": [{"role": "user", "content": prompt}],
+                "max_tokens": 10000
+            },
+            timeout=600
+        )
+        response.raise_for_status()
+        res_json = response.json()
+        summary = res_json["choices"][0]["message"]["content"].strip()
+        return {"summary": summary}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/upload")
 async def upload_audio(background_tasks: BackgroundTasks, file: UploadFile = File(...)):
+    print("helloooo!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     ext = os.path.splitext(file.filename)[1].lower()
     if ext != ".mp3":
         raise HTTPException(status_code=400, detail="Only MP3 files supported.")
 
+    print(f"test_0")
     job_id = str(uuid.uuid4())
     save_path = os.path.join(UPLOAD_DIR, f"{job_id}.mp3")
     with open(save_path, "wb") as out:
@@ -41,6 +77,8 @@ async def upload_audio(background_tasks: BackgroundTasks, file: UploadFile = Fil
     
     jobs[job_id] = {"status": "processing"}
 
+    print(f"test_1")
+    
     background_tasks.add_task(process_audio, save_path, job_id)
     return {"job_id": job_id}
 
@@ -59,16 +97,19 @@ def process_audio(file_path: str, job_id: str):
                 files = {"file": (os.path.basename(mp3_part), audio_file, "audio/mpeg")}
                 data = {"model": "whisper-1"}
                 headers = {"Authorization": f"Bearer {OPENAI_API_KEY}"}
-                response = httpx.post(WHISPER_API_URL, data=data, files=files, headers=headers, timeout=180)
+                response = httpx.post(WHISPER_API_URL, data=data, files=files, headers=headers, timeout=1000)
                 response.raise_for_status()
                 transcript_json = response.json()
                 transcript_text += transcript_json.get("text", "") + "\n"
+                print(transcript_json.get("text", ""))
+                time.sleep(10)
         result_path = os.path.join(RESULTS_DIR, f"{job_id}.txt")
         with open(result_path, "w") as f:
             f.write(transcript_text.strip())
         jobs[job_id] = {"status": "done"}
     except Exception as e:
         jobs[job_id] = {"status": "error", "message": str(e)}
+        print(str(e))
     finally:
         delete_file(file_path)
 

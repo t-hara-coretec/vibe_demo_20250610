@@ -21,11 +21,13 @@ document.getElementById('audioForm').addEventListener('submit', async function(e
     }
 
     const formData = new FormData();
+    console.log(fileInput.files[0])
     formData.append('file', fileInput.files[0]);
 
     let job_id = null;
     try {
-        const res = await fetch('http://localhost:8000/upload', {
+        console.log("hello")
+        const res = await fetch('http://192.168.10.114:8000/upload', {
             method: 'POST',
             body: formData
         });
@@ -33,18 +35,20 @@ document.getElementById('audioForm').addEventListener('submit', async function(e
         const data = await res.json();
         job_id = data.job_id;
     } catch (e) {
-        errorMsg.textContent = e.message;
+        console.log(e.message)
+        errorMsg.textContent = e.message + "hoge";
         errorMsg.classList.remove('hidden');
         progress.classList.add('hidden');
         return;
     }
+    console.log("hello_2")
 
     // Polling for status
     let status = 'processing';
     let pollCount = 0;
-    while (status === 'processing' && pollCount < 60) { // Poll up to 60 times (about 1 min)
+    while (status === 'processing' && pollCount < 600) { // Poll up to 60 times (about 1 min)
         await new Promise(r => setTimeout(r, 1000));
-        const sres = await fetch(`http://localhost:8000/status/${job_id}`);
+        const sres = await fetch(`http://192.168.10.114:8000/status/${job_id}`);
         if (!sres.ok) break;
         const sdata = await sres.json();
         status = sdata.status;
@@ -59,7 +63,7 @@ document.getElementById('audioForm').addEventListener('submit', async function(e
     }
 
     // Fetch transcript
-    const tres = await fetch(`http://localhost:8000/download/${job_id}`);
+    const tres = await fetch(`http://192.168.10.114:8000/download/${job_id}`);
     if (!tres.ok) {
         errorMsg.textContent = 'Failed to download transcript.';
         errorMsg.classList.remove('hidden');
