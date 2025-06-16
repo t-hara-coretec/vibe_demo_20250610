@@ -43,7 +43,12 @@ async def summarize(req: SummaryRequest):
     if not OPENAI_API_KEY:
         raise HTTPException(status_code=500, detail="OpenAI API key not set.")
 
-    prompt = f"Summarize this text as clearly and concisely as possible:\n\n{req.text.strip()}"
+    prompt = f"""
+    以下の文章を詳細を損なわず正確にかつ簡潔にまとめてください:
+    *************************************************
+    {req.text.strip()}
+    *************************************************
+    """
     try:
         response = httpx.post(
             "https://api.openai.com/v1/chat/completions",
@@ -65,10 +70,9 @@ async def summarize(req: SummaryRequest):
 
 @app.post("/upload")
 async def upload_audio(background_tasks: BackgroundTasks, file: UploadFile = File(...)):
-    print("helloooo!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     ext = os.path.splitext(file.filename)[1].lower()
     if ext != ".mp3":
-        raise HTTPException(status_code=400, detail="Only MP3 files supported.")
+        raise HTTPException(status_code=400, detail="MP3ファイルしか変換できません")
 
     print(f"test_0")
     job_id = str(uuid.uuid4())
@@ -96,7 +100,6 @@ def process_audio(file_path: str, job_id: str):
         for mp3_part in mp3_parts:
             with open(mp3_part, "rb") as audio_file:
                 files = {"file": (os.path.basename(mp3_part), audio_file, "audio/mpeg")}
-                #data = {"model": "whisper-1"}
                 data = {"model": "gpt-4o-mini-transcribe"}
                 headers = {"Authorization": f"Bearer {OPENAI_API_KEY}"}
                 response = httpx.post(WHISPER_API_URL, data=data, files=files, headers=headers, timeout=1000)

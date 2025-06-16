@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Speech-to-Text App</title>
+    <title>Speech-To-Text</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col items-center py-10">
@@ -12,16 +12,17 @@
 
         <form id="audioForm" class="space-y-4">
             <input type="file" id="mp3File" accept=".mp3" class="block w-full text-sm text-gray-700" required />
-            <button type="submit" class="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700">Upload & Convert</button>
+            <button type="submit" class="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700">開始</button>
         </form>
 
-        <div id="progress" class="mt-4 hidden text-blue-600">Processing...</div>
+        <div id="progress" class="mt-4 hidden text-blue-600">処理中...</div>
         <div id="errorMsg" class="mt-4 hidden text-red-600"></div>
 
                 <textarea id="resultText" class="w-full mt-4 h-40 border rounded p-2 text-sm hidden"></textarea>
         <button id="summarizeBtn" class="w-full py-2 px-4 mt-2 bg-green-600 text-white font-semibold rounded hover:bg-green-700 hidden">Summarize</button>
         <textarea id="summaryText" class="w-full mt-4 h-24 border rounded p-2 text-sm hidden" placeholder="Summary will appear here..."></textarea>
-        <a id="downloadLink" href="#" class="hidden block mt-2 text-blue-700 hover:underline" download>Download Transcript</a>
+<a id="downloadSummaryLink" href="#" class="hidden block mt-2 text-green-700 hover:underline" download>要約ダウンロード</a>
+        <a id="downloadLink" href="#" class="hidden block mt-2 text-blue-700 hover:underline" download>変換文書ダウンロード</a>
     </div>
     <script src="app.js"></script>
 </body>

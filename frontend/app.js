@@ -20,7 +20,7 @@ document.getElementById('audioForm').addEventListener('submit', async function(e
     summaryText.value = '';
 
     if (!fileInput.files[0]) {
-        errorMsg.textContent = 'Please select an MP3 file to upload.';
+        errorMsg.textContent = '変換したいMP3ファイルを選択してください';
         errorMsg.classList.remove('hidden');
         progress.classList.add('hidden');
         return;
@@ -35,11 +35,11 @@ document.getElementById('audioForm').addEventListener('submit', async function(e
             method: 'POST',
             body: formData
         });
-        if (!res.ok) throw new Error('Failed to upload file.');
+        if (!res.ok) throw new Error('アップロードに失敗しました');
         const data = await res.json();
         job_id = data.job_id;
     } catch (e) {
-        errorMsg.textContent = e.message + "hoge";
+        errorMsg.textContent = e.message;
         errorMsg.classList.remove('hidden');
         progress.classList.add('hidden');
         return;
@@ -49,7 +49,7 @@ document.getElementById('audioForm').addEventListener('submit', async function(e
     let status = 'processing';
     let pollCount = 0;
     while (status === 'processing' && pollCount < 600) { // Poll up to 60 times (about 1 min)
-        await new Promise(r => setTimeout(r, 100));
+        await new Promise(r => setTimeout(r, 1000));
         const sres = await fetch(`http://192.168.10.55:8000/status/${job_id}`);
         if (!sres.ok) break;
         const sdata = await sres.json();
@@ -59,7 +59,7 @@ document.getElementById('audioForm').addEventListener('submit', async function(e
     }
 
     if (status !== 'done') {
-        errorMsg.textContent = 'Transcription failed or timed out.';
+        errorMsg.textContent = '変換失敗：タイムアウト';
         errorMsg.classList.remove('hidden');
         progress.classList.add('hidden');
         return;
@@ -68,7 +68,7 @@ document.getElementById('audioForm').addEventListener('submit', async function(e
     // Fetch transcript
     const tres = await fetch(`http://192.168.10.55:8000/download/${job_id}`);
     if (!tres.ok) {
-        errorMsg.textContent = 'Failed to download transcript.';
+        errorMsg.textContent = 'ダウンロード失敗';
         errorMsg.classList.remove('hidden');
         progress.classList.add('hidden');
         return;
@@ -107,10 +107,17 @@ document.getElementById('summarizeBtn').addEventListener('click', async function
             },
             body: JSON.stringify({ text: transcript })
         });
-        if (!res.ok) throw new Error('Failed to get summary.');
+        if (!res.ok) throw new Error('要約生成失敗');
         const data = await res.json();
         summaryText.value = data.summary;
         summaryText.classList.remove('hidden');
+
+        // Download summary link setup
+        const downloadSummaryLink = document.getElementById('downloadSummaryLink');
+        const summaryBlob = new Blob([data.summary], { type: 'text/plain' });
+        downloadSummaryLink.href = URL.createObjectURL(summaryBlob);
+        downloadSummaryLink.classList.remove('hidden');
+
     } catch (e) {
         errorMsg.textContent = e.message;
         errorMsg.classList.remove('hidden');
