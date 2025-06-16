@@ -6,35 +6,31 @@
     <title>Speech-To-Text</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col items-center py-10">
-    <div class="w-3/5 bg-white p-8 rounded-xl shadow">
+<body class="bg-gray-50 min-h-screen flex flex-col items-center justify-center">
+    <div class="w-3/5 h-screen bg-white p-8 rounded-xl shadow flex flex-col">
         <h1 class="text-2xl font-bold mb-4 text-center">Speech-to-Text Converter</h1>
-
         <form id="audioForm" class="space-y-4 mb-0">
             <input type="file" id="mp3File" accept=".mp3" class="block w-full text-sm text-gray-700" />
         </form>
-
         <div id="progress" class="mt-4 hidden text-blue-600">処理中...</div>
         <div id="errorMsg" class="mt-4 hidden text-red-600"></div>
-
-        <div id="textBoxes" class="flex flex-row space-x-4 mt-4">
+        <div id="textBoxes" class="flex flex-row space-x-4 mt-4 h-full flex-1">
           <!-- Left (original/result) column -->
-          <div class="flex flex-col w-1/2">
+          <div class="flex flex-col w-1/2 h-full">
             <button type="submit" form="audioForm" class="py-2 px-4 mb-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 w-full">開始</button>
             <textarea
               id="resultText"
-              class="h-40 border rounded p-2 text-sm bg-gray-50"
+              class="h-1/2 border rounded p-2 text-sm bg-gray-50"
               placeholder="認識結果がここに表示されます..."
               readonly></textarea>
             <a id="downloadLink" href="#" class="hidden block mt-2 text-blue-700 hover:underline" download>変換文書ダウンロード</a>
           </div>
-
           <!-- Right (summary) column -->
-          <div class="flex flex-col w-1/2">
+          <div class="flex flex-col w-1/2 h-full">
             <button id="summarizeBtn" type="button" class="py-2 px-4 mb-2 bg-green-600 text-white font-semibold rounded hover:bg-green-700 w-full">Summarize</button>
             <textarea
               id="summaryText"
-              class="h-40 border rounded p-2 text-sm bg-gray-50"
+              class="h-1/2 border rounded p-2 text-sm bg-gray-50"
               placeholder="要約がここに表示されます..."
               readonly></textarea>
             <a id="downloadSummaryLink" href="#" class="hidden block mt-2 text-green-700 hover:underline" download>要約ダウンロード</a>
