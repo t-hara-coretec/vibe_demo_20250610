@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Speech-To-Text</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<style>
+.button-disabled, .app-button:disabled {
+  background-color: #e5e7eb !important; /* Tailwind gray-300 */
+  color: #9ca3af !important;            /* Tailwind gray-400 */
+  opacity: 0.6;
+  cursor: not-allowed !important;
+  border-color: #d1d5db !important;
+}
+.button-disabled:hover {
+  background-color: #e5e7eb !important;
+}
+</style>
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col items-center justify-center">
     <div class="w-3/5 h-screen bg-white p-8 rounded-xl shadow flex flex-col">
@@ -17,7 +29,7 @@
         <div id="textBoxes" class="flex flex-row space-x-4 mt-4 h-full flex-1">
           <!-- Left (original/result) column -->
           <div class="flex flex-col w-1/2 h-full">
-            <button type="submit" form="audioForm" class="py-2 px-4 mb-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 w-full">開始</button>
+            <button type="submit" form="audioForm" class="py-2 px-4 mb-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 w-full app-button disabled:!bg-gray-300 disabled:!text-gray-600 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:bg-gray-300">開始</button>
             <textarea
               id="resultText"
               class="h-1/2 border rounded p-2 text-sm bg-gray-50"
@@ -27,7 +39,7 @@
           </div>
           <!-- Right (summary) column -->
           <div class="flex flex-col w-1/2 h-full">
-            <button id="summarizeBtn" type="button" class="py-2 px-4 mb-2 bg-green-600 text-white font-semibold rounded hover:bg-green-700 w-full">Summarize</button>
+            <button id="summarizeBtn" type="button" class="py-2 px-4 mb-2 bg-green-600 text-white font-semibold rounded hover:bg-green-700 w-full app-button disabled:!bg-gray-300 disabled:!text-gray-600 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:bg-gray-300">Summarize</button>
             <textarea
               id="summaryText"
               class="h-1/2 border rounded p-2 text-sm bg-gray-50"

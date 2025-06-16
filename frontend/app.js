@@ -1,5 +1,16 @@
 // app.js - frontend for audio upload, polling, summarizing, and UI
 
+function setButtonsDisabled(disabled) {
+    document.querySelectorAll('.app-button').forEach(btn => {
+        btn.disabled = disabled;
+        if (disabled) {
+            btn.classList.add('button-disabled');
+        } else {
+            btn.classList.remove('button-disabled');
+        }
+    });
+}
+
 document.getElementById('audioForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     const fileInput = document.getElementById('mp3File');
@@ -19,6 +30,7 @@ document.getElementById('audioForm').addEventListener('submit', async function(e
     resultText.readOnly = true;
     summaryText.readOnly = true;
     summarizeBtn.disabled = true;
+    setButtonsDisabled(true);
 
     if (!fileInput.files[0]) {
         showErrorModal('変換したいMP3ファイルを選択してください');
@@ -63,6 +75,7 @@ document.getElementById('audioForm').addEventListener('submit', async function(e
         errorMsg.textContent = '変換失敗：タイムアウト';
         errorMsg.classList.remove('hidden');
         progress.classList.add('hidden');
+        setButtonsDisabled(false);
         return;
     }
 
@@ -72,6 +85,7 @@ document.getElementById('audioForm').addEventListener('submit', async function(e
         errorMsg.textContent = 'ダウンロード失敗';
         errorMsg.classList.remove('hidden');
         progress.classList.add('hidden');
+        setButtonsDisabled(false);
         return;
     }
     const transcript = await tres.text();
@@ -85,6 +99,7 @@ document.getElementById('audioForm').addEventListener('submit', async function(e
     downloadLink.classList.remove('hidden');
     progress.classList.add('hidden');
     summarizeBtn.classList.remove('hidden'); // Show the Summarize button now.
+    setButtonsDisabled(false);
 });
 
 // --- Modal for Summarize Error ---
@@ -115,6 +130,7 @@ document.getElementById('summarizeBtn').addEventListener('click', async function
 
     progress.classList.remove('hidden');
     progress.textContent = "Summarizing...";
+    setButtonsDisabled(true);
 
     try {
         const res = await fetch('http://192.168.10.55:8000/summarize', {
@@ -140,4 +156,5 @@ document.getElementById('summarizeBtn').addEventListener('click', async function
         errorMsg.classList.remove('hidden');
     }
     progress.classList.add('hidden');
+    setButtonsDisabled(false);
 });
