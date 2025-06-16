@@ -22,6 +22,6 @@ dmypy.json
 .DS_Store
 */venv/
 transcripts/
-backend/__pycache_
+backend/__pycache__
 backend/.ipynb_checkpoints_
 temp_uploads/
