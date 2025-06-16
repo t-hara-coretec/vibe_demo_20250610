@@ -14,18 +14,18 @@ document.getElementById('audioForm').addEventListener('submit', async function(e
     downloadLink.classList.add('hidden');
     progress.classList.remove('hidden');
     progress.textContent = "Processing...";
-    summarizeBtn.classList.add('hidden');
     resultText.value = '';
     summaryText.value = '';
     resultText.readOnly = true;
     summaryText.readOnly = true;
 
     if (!fileInput.files[0]) {
-        errorMsg.textContent = '変換したいMP3ファイルを選択してください';
-        errorMsg.classList.remove('hidden');
+        showErrorModal('変換したいMP3ファイルを選択してください');
         progress.classList.add('hidden');
         return;
     }
+
+    summarizeBtn.classList.add('hidden');
 
     const formData = new FormData();
     formData.append('file', fileInput.files[0]);
@@ -86,7 +86,15 @@ document.getElementById('audioForm').addEventListener('submit', async function(e
     summarizeBtn.classList.remove('hidden'); // Show the Summarize button now.
 });
 
-// Add event listener for summarize button
+// --- Modal for Summarize Error ---
+function showErrorModal(message) {
+    document.getElementById('errorModalMsg').textContent = message;
+    document.getElementById('errorModal').classList.remove('hidden');
+}
+function hideErrorModal() {
+    document.getElementById('errorModal').classList.add('hidden');
+}
+document.getElementById('closeErrorModal').onclick = hideErrorModal;
 
 document.getElementById('summarizeBtn').addEventListener('click', async function() {
     const resultText = document.getElementById('resultText');
@@ -96,6 +104,14 @@ document.getElementById('summarizeBtn').addEventListener('click', async function
     const summaryText = document.getElementById('summaryText');
 
     errorMsg.classList.add('hidden');
+
+    // Guard: Prevent summarize if no converted text
+    if (!transcript.trim()) {
+        showErrorModal('先に認識を行ってください');
+        progress.classList.add('hidden');
+        return;
+    }
+
     progress.classList.remove('hidden');
     progress.textContent = "Summarizing...";
 
