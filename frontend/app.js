@@ -18,6 +18,7 @@ document.getElementById('audioForm').addEventListener('submit', async function(e
     summaryText.value = '';
     resultText.readOnly = true;
     summaryText.readOnly = true;
+    summarizeBtn.disabled = true;
 
     if (!fileInput.files[0]) {
         showErrorModal('変換したいMP3ファイルを選択してください');
@@ -25,7 +26,6 @@ document.getElementById('audioForm').addEventListener('submit', async function(e
         return;
     }
 
-    summarizeBtn.classList.add('hidden');
 
     const formData = new FormData();
     formData.append('file', fileInput.files[0]);
@@ -77,6 +77,7 @@ document.getElementById('audioForm').addEventListener('submit', async function(e
     const transcript = await tres.text();
     resultText.value = transcript;
     resultText.readOnly = false;
+    summarizeBtn.disabled = false; // Enable summarize when transcript is ready
 
     // Setup download
     const blob = new Blob([transcript], {type: 'text/plain'});
