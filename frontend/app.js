@@ -33,14 +33,16 @@ document.getElementById('audioForm').addEventListener('submit', async function(e
     resultText.readOnly = true;
     summaryText.readOnly = true;
     summarizeBtn.disabled = true;
-    setButtonsDisabled(true);
+    // setButtonsDisabled(true); // <-- Move this after validation
 
     if (!fileInput.files[0]) {
         showErrorModal('変換したいMP3ファイルを選択してください');
         progress.classList.add('hidden');
+        setButtonsDisabled(false); // re-enable UI if invalid
         return;
     }
 
+    setButtonsDisabled(true); // now truly start disabling
 
     const formData = new FormData();
     formData.append('file', fileInput.files[0]);
@@ -58,6 +60,7 @@ document.getElementById('audioForm').addEventListener('submit', async function(e
         errorMsg.textContent = e.message;
         errorMsg.classList.remove('hidden');
         progress.classList.add('hidden');
+        setButtonsDisabled(false);
         return;
     }
 
