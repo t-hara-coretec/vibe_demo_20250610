@@ -1,5 +1,9 @@
 // app.js - frontend for audio upload, polling, summarizing, and UI
 
+document.getElementById('mp3File').addEventListener('change', function(e) {
+    document.getElementById('fileName').textContent = this.files[0] ? this.files[0].name : '';
+});
+
 function setButtonsDisabled(disabled) {
     document.querySelectorAll('.app-button').forEach(btn => {
         btn.disabled = disabled;
