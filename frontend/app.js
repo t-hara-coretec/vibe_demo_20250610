@@ -10,14 +10,15 @@ document.getElementById('audioForm').addEventListener('submit', async function(e
     const summarizeBtn = document.getElementById('summarizeBtn');
     const summaryText = document.getElementById('summaryText');
 
-    resultText.classList.add('hidden');
     errorMsg.classList.add('hidden');
     downloadLink.classList.add('hidden');
     progress.classList.remove('hidden');
     progress.textContent = "Processing...";
     summarizeBtn.classList.add('hidden');
-    summaryText.classList.add('hidden');
+    resultText.value = '';
     summaryText.value = '';
+    resultText.readOnly = true;
+    summaryText.readOnly = true;
 
     if (!fileInput.files[0]) {
         errorMsg.textContent = '変換したいMP3ファイルを選択してください';
@@ -75,7 +76,7 @@ document.getElementById('audioForm').addEventListener('submit', async function(e
     }
     const transcript = await tres.text();
     resultText.value = transcript;
-    resultText.classList.remove('hidden');
+    resultText.readOnly = false;
 
     // Setup download
     const blob = new Blob([transcript], {type: 'text/plain'});
@@ -95,7 +96,6 @@ document.getElementById('summarizeBtn').addEventListener('click', async function
     const summaryText = document.getElementById('summaryText');
 
     errorMsg.classList.add('hidden');
-    summaryText.classList.add('hidden');
     progress.classList.remove('hidden');
     progress.textContent = "Summarizing...";
 
@@ -110,7 +110,7 @@ document.getElementById('summarizeBtn').addEventListener('click', async function
         if (!res.ok) throw new Error('要約生成失敗');
         const data = await res.json();
         summaryText.value = data.summary;
-        summaryText.classList.remove('hidden');
+        summaryText.readOnly = false;
 
         // Download summary link setup
         const downloadSummaryLink = document.getElementById('downloadSummaryLink');
