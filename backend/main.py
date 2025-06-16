@@ -49,9 +49,9 @@ async def summarize(req: SummaryRequest):
             "https://api.openai.com/v1/chat/completions",
             headers={"Authorization": f"Bearer {OPENAI_API_KEY}"},
             json={
-                "model": "gpt-4.1",
+                "model": "gpt-4.1-mini",
                 "messages": [{"role": "user", "content": prompt}],
-                "max_tokens": 10000
+                "max_tokens": 30000
             },
             timeout=600
         )
@@ -60,6 +60,7 @@ async def summarize(req: SummaryRequest):
         summary = res_json["choices"][0]["message"]["content"].strip()
         return {"summary": summary}
     except Exception as e:
+        print(f"summarize : error = {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/upload")
@@ -95,7 +96,8 @@ def process_audio(file_path: str, job_id: str):
         for mp3_part in mp3_parts:
             with open(mp3_part, "rb") as audio_file:
                 files = {"file": (os.path.basename(mp3_part), audio_file, "audio/mpeg")}
-                data = {"model": "whisper-1"}
+                #data = {"model": "whisper-1"}
+                data = {"model": "gpt-4o-mini-transcribe"}
                 headers = {"Authorization": f"Bearer {OPENAI_API_KEY}"}
                 response = httpx.post(WHISPER_API_URL, data=data, files=files, headers=headers, timeout=1000)
                 response.raise_for_status()
