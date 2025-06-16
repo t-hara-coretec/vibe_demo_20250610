@@ -9,6 +9,9 @@ function setButtonsDisabled(disabled) {
             btn.classList.remove('button-disabled');
         }
     });
+    // file input
+    const fileInput = document.getElementById('mp3File');
+    if (fileInput) fileInput.disabled = disabled;
 }
 
 document.getElementById('audioForm').addEventListener('submit', async function(e) {

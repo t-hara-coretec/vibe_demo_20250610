@@ -16,13 +16,19 @@
 .button-disabled:hover {
   background-color: #e5e7eb !important;
 }
+.file-input-disabled[disabled] {
+  background-color: #e5e7eb !important;
+  color: #9ca3af !important;
+  opacity: 0.7;
+  cursor: not-allowed !important;
+}
 </style>
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col items-center justify-center">
     <div class="w-3/5 h-screen bg-white p-8 rounded-xl shadow flex flex-col">
         <h1 class="text-2xl font-bold mb-4 text-center">Speech-to-Text Converter</h1>
         <form id="audioForm" class="space-y-4 mb-0">
-            <input type="file" id="mp3File" accept=".mp3" class="block w-full text-sm text-gray-700" />
+            <input type="file" id="mp3File" accept=".mp3" class="block w-full text-sm text-gray-700 file-input-disabled" />
         </form>
         <div id="progress" class="mt-4 hidden text-blue-600">処理中...</div>
         <div id="errorMsg" class="mt-4 hidden text-red-600"></div>
