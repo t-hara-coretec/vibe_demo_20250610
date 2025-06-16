@@ -21,3 +21,7 @@ dmypy.json
 .idea/
 .DS_Store
 */venv/
+transcripts/
+backend/__pycache_
+backend/.ipynb_checkpoints_
+temp_uploads/
