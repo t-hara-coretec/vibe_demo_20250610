@@ -7,67 +7,67 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 <style>
 .button-disabled, .app-button:disabled {
-  background-color: #e5e7eb !important; /* Tailwind gray-300 */
+  background-color: #374151 !important; /* Tailwind gray-700 */
   color: #9ca3af !important;            /* Tailwind gray-400 */
   opacity: 0.6;
   cursor: not-allowed !important;
-  border-color: #d1d5db !important;
+  border-color: #4b5563 !important;     /* Tailwind gray-600 */
 }
 .button-disabled:hover {
-  background-color: #e5e7eb !important;
+  background-color: #374151 !important;
 }
 .file-input-disabled[disabled] {
-  background-color: #e5e7eb !important;
+  background-color: #4b5563 !important;
   color: #9ca3af !important;
   opacity: 0.7;
   cursor: not-allowed !important;
 }
 </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col items-center justify-center">
-    <div class="w-3/5 h-screen bg-white p-8 rounded-xl shadow flex flex-col">
-        <h1 class="text-2xl font-bold mb-2 text-center">Speech-to-Text Converter</h1>
-<p class="text-center text-gray-600 mb-4">MP3ファイルをアップロードして、AI音声認識・要約を簡単に体験できます。</p>
+<body class="bg-black min-h-screen flex flex-col items-center justify-center">
+    <div class="w-3/5 h-screen bg-gray-900 p-8 rounded-xl shadow flex flex-col justify-center">
+        <h1 class="text-2xl font-bold mb-2 text-center text-gray-100">Speech-to-Text Converter</h1>
+<p class="text-center text-gray-400 mb-4">MP3ファイルをアップロードして、AI音声認識・要約を簡単に体験できます。</p>
         <form id="audioForm" class="space-y-4 mb-0">
             <div class="flex items-center">
   <input type="file" id="mp3File" accept=".mp3" class="hidden" />
   <label for="mp3File"
     title="MP3ファイルを選択してください"
-    class="py-2 px-4 mb-2 bg-green-600 text-white font-semibold rounded hover:bg-green-700 app-button cursor-pointer disabled:!bg-gray-300 disabled:!text-gray-600 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:bg-gray-300 text-center">
+    class="py-2 px-4 mb-2 bg-yellow-400 text-gray-900 font-semibold rounded hover:bg-yellow-300 app-button cursor-pointer disabled:!bg-gray-700 disabled:!text-gray-500 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:bg-gray-700 text-center">
     ファイルを選択
   </label>
-  <span id="fileName" class="ml-2 text-gray-700 text-sm"></span>
+  <span id="fileName" class="ml-2 text-gray-200 text-sm"></span>
 </div>
         </form>
-        <div id="progress" class="mt-4 hidden text-blue-600">処理中...</div>
-        <div id="errorMsg" class="mt-4 hidden text-red-600"></div>
+        <div id="progress" class="mt-4 hidden text-blue-300">処理中...</div>
+        <div id="errorMsg" class="mt-4 hidden text-red-400"></div>
         <div id="textBoxes" class="flex flex-row space-x-4 mt-4 h-full flex-1">
           <!-- Left (original/result) column -->
           <div class="flex flex-col w-1/2 h-full">
-            <button type="submit" form="audioForm" title="音声認識を開始します" class="py-2 px-4 mb-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 w-full app-button disabled:!bg-gray-300 disabled:!text-gray-600 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:bg-gray-300">開始</button>
+            <button type="submit" form="audioForm" title="音声認識を開始します" class="py-2 px-4 mb-2 bg-blue-800 text-white font-semibold rounded hover:bg-blue-900 w-full app-button disabled:!bg-gray-700 disabled:!text-gray-500 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:bg-gray-700">開始</button>
             <textarea
               id="resultText"
-              class="h-1/2 border rounded p-2 text-sm bg-gray-50"
+              class="h-1/2 border border-gray-700 rounded p-2 text-sm bg-gray-800 text-gray-100"
               placeholder="認識結果がここに表示されます..."
               readonly></textarea>
-            <a id="downloadLink" href="#" class="hidden block mt-2 text-blue-700 hover:underline" download title="変換結果をダウンロード">変換文書ダウンロード</a>
+            <a id="downloadLink" href="#" class="hidden block mt-2 text-blue-300 hover:underline" download title="変換結果をダウンロード">変換文書ダウンロード</a>
           </div>
           <!-- Right (summary) column -->
           <div class="flex flex-col w-1/2 h-full">
-            <button id="summarizeBtn" type="button" title="認識結果を要約します" class="py-2 px-4 mb-2 bg-green-600 text-white font-semibold rounded hover:bg-green-700 w-full app-button disabled:!bg-gray-300 disabled:!text-gray-600 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:bg-gray-300">Summarize</button>
+            <button id="summarizeBtn" type="button" title="認識結果を要約します" class="py-2 px-4 mb-2 bg-purple-600 text-white font-semibold rounded hover:bg-purple-700 w-full app-button disabled:!bg-gray-700 disabled:!text-gray-500 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:bg-gray-700">Summarize</button>
             <textarea
               id="summaryText"
-              class="h-1/2 border rounded p-2 text-sm bg-gray-50"
+              class="h-1/2 border border-gray-700 rounded p-2 text-sm bg-gray-800 text-gray-100"
               placeholder="要約がここに表示されます..."
               readonly></textarea>
-            <a id="downloadSummaryLink" href="#" class="hidden block mt-2 text-green-700 hover:underline" download title="要約をダウンロード">要約ダウンロード</a>
+            <a id="downloadSummaryLink" href="#" class="hidden block mt-2 text-emerald-300 hover:underline" download title="要約をダウンロード">要約ダウンロード</a>
           </div>
         </div>
         <!-- Error Modal Dialog for Summarize -->
-        <div id="errorModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50 hidden">
-          <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center max-w-sm w-full">
-            <div id="errorModalMsg" class="text-red-600 text-center mb-4"></div>
-            <button id="closeErrorModal" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        <div id="errorModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50 hidden">
+          <div class="bg-gray-900 rounded-lg shadow-lg p-6 flex flex-col items-center max-w-sm w-full border border-gray-700">
+            <div id="errorModalMsg" class="text-red-400 text-center mb-4"></div>
+            <button id="closeErrorModal" class="mt-2 px-4 py-2 bg-blue-800 text-white rounded hover:bg-blue-900">
               閉じる
             </button>
           </div>
